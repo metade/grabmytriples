@@ -2,6 +2,7 @@ require 'rubygems'
 require 'net/http'
 require 'uri'
 require 'sinatra'
+require 'erb'
 
 def set(endpoint, graph, rdf)
   puts "#{endpoint} -> #{graph} - #{rdf.size}"
@@ -30,5 +31,11 @@ end
 get '/set' do
   store = params['store'] || 'http://dbtune.org/beancounter/data/'
   process(store, params['url'], params['graph'])
+  redirect params['url']
 end
-# process('http://dbtune.org/beancounter/data/', 'http://www.bbc.co.uk/music/artists/5483e1c0-14ca-4ec4-9b03-c4e987420e4e')
+
+get '/' do
+  erb %[
+    <a href="javascript:location.href='http://grabmytriples.heroku.com/set?url='+location.href;">grabmytriples</a>
+  ]
+end
